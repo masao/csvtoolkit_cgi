@@ -74,7 +74,15 @@ class CSVToolkit
       @data = []
       iconv = Iconv.new( "utf-8", @conf.encoding )
       Dir.glob(File.join(dir, "*.csv")).each do |f|
-         tmp = CSV.readlines(f).map{|e| e.map{|e2| iconv.iconv(e2) } }
+         tmp = []
+         CSV.open(f, "r", @conf.csv_separator){|row|
+            tmp << row.map{|e|
+               begin
+                  iconv.iconv(e)
+               rescue Iconv::IllegalSequence
+               end
+            }
+         }
          if @conf.skip_csvheader
             tmp = tmp[@conf.skip_csvheader..-1]
          end
