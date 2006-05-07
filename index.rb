@@ -5,6 +5,7 @@ require "cgi"
 require "erb"
 require "csv"
 require "yaml"
+require "iconv"
 
 CSVTOOLKIT_VERSION = '0.1alpha ' << "$Date$".scan(/(\d{4})\/(\d{2})\/(\d{2})/).join("")
 
@@ -74,8 +75,9 @@ class CSVToolkit
    end
    def load_csv( dir )
       @data = []
+      iconv = Iconv.new( "utf-8", @conf.encoding )
       Dir.glob(File.join(dir, "*.csv")).each do |f|
-         tmp = CSV.readlines(f)
+         tmp = CSV.readlines(f).map{|e| e.map{|e2| iconv.iconv(e2) } }
          if @conf.skip_csvheader
             tmp = tmp[@conf.skip_csvheader..-1]
          end
