@@ -52,7 +52,7 @@ class CGI
    end
 end
 
-module CSVToolkit
+class CSVToolkit
    class Config
       def initialize( filename )
          @conf = open(filename){|io| YAML.load(io) }
@@ -65,12 +65,19 @@ module CSVToolkit
          end
       end
    end
+   def initialize( config )
+      @conf = config
+   end
    def load_csv( dir )
-      tmp = []
+      @data = []
       Dir.glob(File.join(dir, "*.csv")).each do |f|
-         tmp << CSV.readlines(f)
+         @data << CSV.readlines(f)
       end
-      tmp.compact
+      @data.compact
+   end
+   def do_filter( criteria )
+   end
+   def do_sort( criteria )
    end
 end
 

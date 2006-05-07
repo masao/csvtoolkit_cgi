@@ -4,25 +4,26 @@
 require "test/unit"
 require "index.rb"
 
-include CSVToolkit
-
 class TCConfig < Test::Unit::TestCase
    def setup
-      @conf = Config::new("test/test.conf")
+      @conf = CSVToolkit::Config.new("test/test.conf")
    end
    def test_config
       assert(@conf)
-      assert_equal("csv/", @conf.datadir)
+      assert_equal("test/", @conf.datadir)
    end
 end
 
 class TCCSVToolKit < Test::Unit::TestCase
    def setup
-      @conf = Config::new("test/test.conf")
+      @conf = CSVToolkit::Config::new("test/test.conf")
+      @csvdata = CSVToolkit.new( @conf )
    end
    def test_load_csv
-      assert(load_csv("test/"))
-      assert(load_csv(@conf.datadir))
-      assert_equal(load_csv("test/"), load_csv("test/"))
+      assert(tmp1 = @csvdata.load_csv("test/"))
+      assert(tmp2 = @csvdata.load_csv(@conf.datadir))
+      assert(tmp1 = @csvdata.load_csv("test/"))
+      assert(tmp2 = @csvdata.load_csv(@conf.datadir))
+      assert_equal(tmp1, tmp2)
    end
 end
