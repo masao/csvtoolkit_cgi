@@ -3,7 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="base.css">
-<!-- link rel="stylesheet" href="default.css" type="text/css" -->
 <title><%= conf.title %></title>
 <style type="text/css">
 th { font-size:smaller; }
@@ -15,7 +14,9 @@ padding-left: 10px;
 </style>
 </head>
 <body>
+<div id="header">
 <%= conf.header %>
+</div>
 <hr>
 <table>
   <tr>
@@ -62,8 +63,8 @@ Page:
 <% end %>
 <p>
 <hr>
-<address>
-<a href="<%= conf.address %>"><%= conf.address %></a>
-</address>
+<div id="footer">
+<%= conf.footer %>
+</div>
 </body>
 </html>
