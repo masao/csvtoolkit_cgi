@@ -22,7 +22,7 @@ padding-left: 10px;
 <%  column = conf.column_label
     column.each_with_index do |label, i| %>
     <th>
-	<% if cgi.sort_by.nil? or cgi.sort_by == i then %>
+	<% if cgi.sort_by and cgi.sort_by == i then %>
 	<%= label %>
 	<% else %>
 	<a href="<%= cgi.self_url %>?sort_by=<%= i %>"><%= label %></a>
