@@ -86,7 +86,8 @@ class CSVToolkit
    def do_filter( criteria )
    end
    def do_sort( idx, reverse = nil )
-      @data = @data.sort_by{|e| e[idx] }
+      #p idx
+      @data = @data.sort_by{|e| e[idx] || "\xff" }
       @data.reverse! if reverse
       @data
    end
@@ -113,9 +114,9 @@ if $0 == __FILE__
 
    if cgi.valid?("item_id") and item = csvdata[item_id.to_i]
       puts cgi.header
-      puts ERB.new( open("./skel/item_id.html"){|f| f.read } ).result(binding)
+      puts ERB.new( open("./skel/item_id.html"){|f| f.read }, $SAFE, 2 ).result(binding)
    else
       puts cgi.header
-      puts ERB.new( open("./skel/list.html"){|f| f.read } ).result(binding)
+      puts ERB.new( open("./skel/list.html"){|f| f.read }, $SAFE, 2 ).result(binding)
    end
 end
