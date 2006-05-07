@@ -65,25 +65,31 @@ class CSVToolkit
          end
       end
    end
+
+   attr_reader :data
    def initialize( config )
       @conf = config
    end
    def load_csv( dir )
       @data = []
       Dir.glob(File.join(dir, "*.csv")).each do |f|
-         @data << CSV.readlines(f)
+         @data += CSV.readlines(f)
       end
-      @data.compact
+      @data
    end
    def do_filter( criteria )
    end
-   def do_sort( criteria )
+   def do_sort( idx, reverse = nil )
+      @data = @data.sort_by{|e| e[idx] }
+      @data.reverse! if reverse
+      @data
    end
 end
 
 if $0 == __FILE__
-   include CSVToolkit
-   data = load_csv(DATADIR)
+   conf = CSVToolkit::Config.new( "csvtoolkit.conf" )
+   data = CSVToolkit.new( conf )
+   data.load_csv(conf.datadir)
    cgi = CGI.new
 
    if cgi.valid?("item_id") and item = data[item_id.to_i]

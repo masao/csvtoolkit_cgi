@@ -26,4 +26,13 @@ class TCCSVToolKit < Test::Unit::TestCase
       assert(tmp2 = @csvdata.load_csv(@conf.datadir))
       assert_equal(tmp1, tmp2)
    end
+   def test_do_sort
+      data = @csvdata.load_csv(@conf.datadir)
+      #p data, @csvdata.do_sort(1, true)
+      assert_equal(@csvdata.do_sort(0), data)
+      assert_equal(@csvdata.do_sort(1), data)
+      assert_equal(@csvdata.do_sort(2), data)
+      #assert_equal(@csvdata.do_sort(3), data)
+      assert_not_equal(@csvdata.do_sort(0, true), data)
+   end
 end
