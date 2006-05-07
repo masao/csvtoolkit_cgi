@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<link rel="stylesheet" type="text/css" href="monitor.css">
+<!-- link rel="stylesheet" href="default.css" type="text/css" -->
+<title>判定者モニターツール</title>
+<style type="text/css">
+th { font-size:smaller; }
+td { text-align:center; }
+.added {
+border-left: dashed thin;
+padding-left: 10px;
+}
+</style>
+</head>
+
+<body>
+<ul>
+  <li>リンク:
+  <ul>
+    <li><a href="http://ntcweb-03.nii.ac.jp/ntcassess/navi2frun.opt/index.php">判定システム・課題一覧判定</a>
+    <li><a href="http://ntcweb-03.nii.ac.jp/ntcassess/navi2frun.opt/020C.php">判定システム・管理者用データコピーツール</a>
+  </ul>
+</ul>
+
+<hr>
+<form action="<%= cgi.self_url %>">
+課題番号: <input type="text" name="qid">
+<input type="submit" value="編集">
+</form>
+<hr>
+
+<table>
+  <tr>
+    <th>
+	<% if cgi.sort_by.nil? or cgi.sort_by == "qid" then %>
+	課題番号
+	<% else %>
+	<a href="<%= cgi.self_url %>?sort_by=qid">課題番号</a>
+	<% end %>
+    </th>
+    <th>
+	<% if cgi.sort_by == "assessor" then %>
+	判定者
+	<% else %>
+	<a href="<%= cgi.self_url %>?sort_by=assessor">判定者</a>
+	<% end %>
+    </th>
+    <th>
+	<% if cgi.sort_by == "status" then %>
+	状態
+	<% else %>
+	<a href="<%= cgi.self_url %>?sort_by=status">状態</a>
+	<% end %>
+    </th>
+    <th>判定対象文書数</th>
+    <th colspan="4">判定結果(A,B,D,Z)</th>
+    <th>課題TITLE</th>
+    <th>備考・編集</th>
+  </tr>
+
+  <tbody>
+<%
+topics = topics.sort_by do |q|
+  if cgi.valid?("sort_by")
+     case cgi.params["sort_by"][0]
+     when "assessor"
+  	[ topic2assessor(q.num)=="unknown" ? 1 : 0,
+	  topic2assessor(q.num), q.num ]
+     when "status"
+  	[ JudgeTopic.new(q.num).status.hash * -1, q.num ]
+     else
+  	q.num
+     end
+  else
+     q.num
+  end
+end
+((cgi.start)...(cgi.start+cgi.num)).each do |i| %>
+<%
+  q = topics[i]
+  judge = JudgeCSV.new(topic2assessor(q.num), q.num)
+  data  = JudgeTopic.new(q.num)
+%>
+  <tr>
+    <td><%= q.num %></td>
+    <td><%= topic2assessor(q.num) %>
+    <td class="status" align="center"><%= data.status_str %></td>
+    <td align="right"><%= get_pooling_info(q.num) %></td>
+	<% if judge.empty? %>
+    <td colspan="4" align="center">-</td>
+	<% else %>
+    <td align="right"><%= judge["A"] %></td>
+    <td align="right"><%= judge["B"] %></td>
+    <td align="right"><%= judge["D"] %></td>
+    <td align="right"><%= judge["Z"] %></td>
+	<% end %>
+    <td class="title"><%= q.title %></td>
+    <td><a href="<%= cgi.self_url %>?qid=<%= q.num %>">編集</a></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<hr>
+<p>
+Page:
+<% (topics.size/cgi.num).times do |i| %>
+   <% if i*cgi.num == cgi.start %>
+	[<%= i+1 %>]
+   <% else %>
+	<a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*cgi.num %>;num=<%= cgi.num %>">[<%= i+1 %>]</a>
+   <% end %>
+<% end %>
+<p>
+<hr>
+<address>
+<a href="mailto:ntcadm-web@nii.ac.jp">ntcadm-web@nii.ac.jp</a>
+</address>
+</body>
+</html>

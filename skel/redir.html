@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<!-- link rel="stylesheet" href="default.css" type="text/css" -->
+<meta http-equiv="Refresh" content="<%= time %>; URL=<%= cgi.self_url %>?qid=<%= q.num %>">
+<title>monitor of assessors</title>
+</head>
+<body>
+<p><%= message %></p>
+<p><%= time %>秒後に移動します。</p>
+<p>移動しない場合は、以下のリンクをクリックすること:<br>
+<a href="<%= cgi.self_url %>?qid=<%= q.num %>"><%= cgi.self_url %>?qid=<%= q.num %></a>
+</p>
+<hr>
+<address>
+<a href="mailto:ntcadm-web@nii.ac.jp">ntcadm-web@nii.ac.jp</a>
+</address>
+</body>
+</html>

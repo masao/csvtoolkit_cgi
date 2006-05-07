@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+<!-- link rel="stylesheet" href="default.css" type="text/css" -->
+<title><%= item.num %> <%= TITLE %></title>
+<link rel="stylesheet" type="text/css" href="monitor.css">
+</head>
+<body>
+<h1><%= item.num %> (<%= item.title %>)</h1>
+<form action="<%= cgi.self_url %>" method="POST">
+<input type="hidden" name="qid" value="<%= item.num %>">
+<input type="hidden" name="digest" value="<%= data.digest %>">
+<ul>
+  <li>担当者:
+      <select name="assessor">
+      <% ASSESSORS.each do |person| %>
+	<option value="<%= person[:uid] == "unknown" ? "" : person[:uid] %>"<%= person[:uid] == data.assessor ? " selected" : "" %>><%= person[:uid] %></option>
+      <% end %>
+      </select>
+  <li>判定対象文書数: <%= get_pooling_info(item.num) %>
+  <li>判定結果:
+      <% judge = JudgeCSV.new(data.assessor, item.num) %>
+      <% if judge.empty? %>
+      -
+      <% else %>
+      <br>
+      <ul>
+	<% judge.keys.sort.each do |result| %>
+	<li><%= result %>: <%= judge[result] %>件
+	<% end %>
+      </ul>
+      <% end %>
+  <li>状態:
+      <select name="status">
+	<option value=""<%= if not data.status then " selected" end %>>-</option>
+	<option value="report"<%= if data.status == :report then " selected" end %>>報告</option>
+	<option value="fix"<%= if data.status == :fix then " selected" end %>>調整</option>
+	<option value="done"<%= if data.status == :done then " selected" end %>>完了</option>
+      </select>
+  <li>備考:<br>
+      <textarea name="memo" rows="10" cols="70"><%= data.memo.escape_html %></textarea>
+</ul>
+<input name="submit" type="submit" value="登録する">
+</form>
+
+<% unless data.history.empty? %>
+<div class="history">
+<p>
+履歴:
+</p>
+<pre class="history"><% data.history.each do |line| %><% tmp = line.chomp.split(/\t/) %>
+<%= t = Time.at(tmp.shift.to_i); t.to_i == 0 ? "-" : t.strftime("%Y-%m-%d %H:%M") %>	<%= tmp.map{|e| e.shorten(80) }.join("\t") %><% end %></pre>
+</div>
+<% end %>
+<hr>
+<ul>
+  <li><form action="<%= cgi.self_url %>">
+      課題番号: <input type="text" name="qid">
+      <input type="submit" value="編集">
+      </form>
+  <li><a href="<%= cgi.self_url %>">モニターツール・トップに戻る</a>
+  <li><a href="http://ntcweb-03.nii.ac.jp/ntcassess/navi2frun.opt/020C.php">管理者用データコピーツール</a>
+</ul>
+<hr>
+<address>
+<a href="mailto:ntcadm-web@nii.ac.jp">ntcadm-web@nii.ac.jp</a>
+</address>
+</body>
+</html>
