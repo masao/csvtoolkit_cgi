@@ -41,7 +41,7 @@ ITEM: <input type="text" name="item_id">
 <%
 ((cgi.start)...(cgi.start+cgi.num)).each do |i| %>
 <%
-  p csvdata
+  #p csvdata
   item = csvdata[i]
   break if item.nil?
 %>
