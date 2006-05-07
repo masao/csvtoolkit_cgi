@@ -6,24 +6,20 @@
 <title><%= conf.title %></title>
 <style type="text/css">
 th { font-size:smaller; }
-td { text-align:center; }
-.added {
-border-left: dashed thin;
-padding-left: 10px;
-}
 </style>
 </head>
 <body>
 <div id="header">
 <%= conf.header %>
 </div>
+
 <hr>
 <table>
   <tr>
-<%  column = conf.column_label
-    column.each_with_index do |label, i| %>
+<%  columns = conf.column_label
+    columns.each_with_index do |label, i| %>
     <th>
-	<% if cgi.sort_by and cgi.sort_by == i then %>
+	<% if cgi.sort_by and cgi.sort_by.to_i.abs == i then %>
 	<%= label %>
 	<% else %>
 	<a href="<%= cgi.self_url %>?sort_by=<%= i %>"><%= label %></a>
@@ -36,19 +32,18 @@ padding-left: 10px;
 <%
 ((cgi.start)...(cgi.start+cgi.num)).each do |i| %>
 <%
-  #p csvdata
   item = csvdata[i]
   break if item.nil?
 %>
   <tr>
-<%  column = conf.column_label
-    column.each_with_index do |label, i| %>
-    <td><%= item[i] %></td>
+<%  item.each_with_index do |e, i| %>
+    <td class="col<%= i %>"><%= e %></td>
 <% end %>
   </tr>
 <% end %>
   </tbody>
 </table>
+
 <% if csvdata.size > cgi.num %>
 <hr>
 <p>
