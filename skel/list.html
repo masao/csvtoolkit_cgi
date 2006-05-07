@@ -35,7 +35,7 @@ th { font-size:smaller; }
   item = csvdata[i]
   break if item.nil?
 %>
-  <tr>
+  <tr id="row<%= i %>">
 <%  item.each_with_index do |e, i| %>
     <td class="col<%= i %>"><%= e %></td>
 <% end %>
