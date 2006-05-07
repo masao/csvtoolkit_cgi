@@ -52,28 +52,30 @@ class CGI
    end
 end
 
-class Config
-   def initialize( filename )
-      @conf = open(filename){|io| YAML.load(io) }
-   end
-   def method_missing( name, args = nil )
-      if @conf.has_key?(name.to_s)
-         @conf[name.to_s]
-      else
-         raise NameError::new("method_missing: #{name.inspect}( #{args.inspect} )")
+module CSVToolkit
+   class Config
+      def initialize( filename )
+         @conf = open(filename){|io| YAML.load(io) }
+      end
+      def method_missing( name, args = nil )
+         if @conf.has_key?(name.to_s)
+            @conf[name.to_s]
+         else
+            raise NameError::new("method_missing: #{name.inspect}( #{args.inspect} )")
+         end
       end
    end
-end
-
-def load_csv( dir )
-   tmp = []
-   Dir.glob(File.join(dir, "*.csv")).each do |f|
-      tmp << CSV.readlines(f)
+   def load_csv( dir )
+      tmp = []
+      Dir.glob(File.join(dir, "*.csv")).each do |f|
+         tmp << CSV.readlines(f)
+      end
+      tmp.compact
    end
-   tmp.compact
 end
 
 if $0 == __FILE__
+   include CSVToolkit
    data = load_csv(DATADIR)
    cgi = CGI.new
 

@@ -4,6 +4,8 @@
 require "test/unit"
 require "index.rb"
 
+include CSVToolkit
+
 class TCConfig < Test::Unit::TestCase
    def setup
       @conf = Config::new("test/test.conf")
