@@ -6,7 +6,7 @@ require "erb"
 require "csv"
 require "yaml"
 
-CSVTOOLKIT_VERSION = '0.1alpha ' << "$Revision$".scan(/(\d{4})\/(\d{2})\/(\d{2})/).join("")
+CSVTOOLKIT_VERSION = '0.1alpha ' << "$Date$".scan(/(\d{4})\/(\d{2})\/(\d{2})/).join("")
 
 CONFIG = "csvtoolkit.conf"
 
