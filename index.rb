@@ -6,6 +6,8 @@ require "erb"
 require "csv"
 require "yaml"
 
+CSVTOOLKIT_VERSION = '0.1alpha ' << "$Revision$".scan(/(\d{4})\/(\d{2})\/(\d{2})/).join("")
+
 CONFIG = "csvtoolkit.conf"
 
 class String
@@ -84,15 +86,28 @@ class CSVToolkit
       @data.reverse! if reverse
       @data
    end
+   def []( idx )
+      @data[ idx ]
+   end
+   def size
+      @data.size
+   end
 end
 
 if $0 == __FILE__
-   conf = CSVToolkit::Config.new( "csvtoolkit.conf" )
-   data = CSVToolkit.new( conf )
-   data.load_csv(conf.datadir)
    cgi = CGI.new
+   conf = CSVToolkit::Config.new( "csvtoolkit.conf" )
+   csvdata = CSVToolkit.new( conf )
+   csvdata.load_csv(conf.datadir)
+   if cgi.valid?("sort_by")
+      sort_criteria = cgi.sort_by
+      if sort_criteria.sub!(/^-/, "")
+         reverse = true
+      end
+      csvdata.do_sort( sort_criteria.to_i, reverse )
+   end
 
-   if cgi.valid?("item_id") and item = data[item_id.to_i]
+   if cgi.valid?("item_id") and item = csvdata[item_id.to_i]
       puts cgi.header
       puts ERB.new( open("./skel/item_id.html"){|f| f.read } ).result(binding)
    else

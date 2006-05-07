@@ -9,6 +9,7 @@ class TCConfig < Test::Unit::TestCase
       @conf = CSVToolkit::Config.new("test/test.conf")
    end
    def test_config
+      p @conf
       assert(@conf)
       assert_equal("test/", @conf.datadir)
    end
@@ -36,3 +37,5 @@ class TCCSVToolKit < Test::Unit::TestCase
       assert_not_equal(@csvdata.do_sort(0, true), data)
    end
 end
+
+p CSVTOOLKIT_VERSION

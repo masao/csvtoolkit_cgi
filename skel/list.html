@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="ja">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
-<link rel="stylesheet" type="text/css" href="monitor.css">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="base.css">
 <!-- link rel="stylesheet" href="default.css" type="text/css" -->
-<title>冉年荚モニタ〖ツ〖ル</title>
+<title><%= conf.title %></title>
 <style type="text/css">
 th { font-size:smaller; }
 td { text-align:center; }
@@ -14,90 +14,42 @@ padding-left: 10px;
 }
 </style>
 </head>
-
 <body>
-<ul>
-  <li>リンク:
-  <ul>
-    <li><a href="http://ntcweb-03.nii.ac.jp/ntcassess/navi2frun.opt/index.php">冉年システムˇ草玛办枉冉年</a>
-    <li><a href="http://ntcweb-03.nii.ac.jp/ntcassess/navi2frun.opt/020C.php">冉年システムˇ瓷妄荚脱デ〖タコピ〖ツ〖ル</a>
-  </ul>
-</ul>
-
+<%= conf.header %>
 <hr>
 <form action="<%= cgi.self_url %>">
-草玛戎规: <input type="text" name="qid">
-<input type="submit" value="试礁">
+ITEM: <input type="text" name="item_id">
+<input type="submit" value="绶ㄩ泦">
 </form>
 <hr>
 
 <table>
   <tr>
+<%  column = conf.column_label
+    column.each_with_index do |label, i| %>
     <th>
-	<% if cgi.sort_by.nil? or cgi.sort_by == "qid" then %>
-	草玛戎规
+	<% if cgi.sort_by.nil? or cgi.sort_by == "item_id" then %>
+	<%= label %>
 	<% else %>
-	<a href="<%= cgi.self_url %>?sort_by=qid">草玛戎规</a>
+	<a href="<%= cgi.self_url %>?sort_by=#{i}"><%= label %></a>
 	<% end %>
     </th>
-    <th>
-	<% if cgi.sort_by == "assessor" then %>
-	冉年荚
-	<% else %>
-	<a href="<%= cgi.self_url %>?sort_by=assessor">冉年荚</a>
-	<% end %>
-    </th>
-    <th>
-	<% if cgi.sort_by == "status" then %>
-	觉轮
-	<% else %>
-	<a href="<%= cgi.self_url %>?sort_by=status">觉轮</a>
-	<% end %>
-    </th>
-    <th>冉年滦据矢今眶</th>
-    <th colspan="4">冉年冯蔡(A,B,D,Z)</th>
-    <th>草玛TITLE</th>
-    <th>洒雇ˇ试礁</th>
+<% end %>
   </tr>
 
   <tbody>
 <%
-topics = topics.sort_by do |q|
-  if cgi.valid?("sort_by")
-     case cgi.params["sort_by"][0]
-     when "assessor"
-  	[ topic2assessor(q.num)=="unknown" ? 1 : 0,
-	  topic2assessor(q.num), q.num ]
-     when "status"
-  	[ JudgeTopic.new(q.num).status.hash * -1, q.num ]
-     else
-  	q.num
-     end
-  else
-     q.num
-  end
-end
 ((cgi.start)...(cgi.start+cgi.num)).each do |i| %>
 <%
-  q = topics[i]
-  judge = JudgeCSV.new(topic2assessor(q.num), q.num)
-  data  = JudgeTopic.new(q.num)
+  p csvdata
+  item = csvdata[i]
+  break if item.nil?
 %>
   <tr>
-    <td><%= q.num %></td>
-    <td><%= topic2assessor(q.num) %>
-    <td class="status" align="center"><%= data.status_str %></td>
-    <td align="right"><%= get_pooling_info(q.num) %></td>
-	<% if judge.empty? %>
-    <td colspan="4" align="center">-</td>
-	<% else %>
-    <td align="right"><%= judge["A"] %></td>
-    <td align="right"><%= judge["B"] %></td>
-    <td align="right"><%= judge["D"] %></td>
-    <td align="right"><%= judge["Z"] %></td>
-	<% end %>
-    <td class="title"><%= q.title %></td>
-    <td><a href="<%= cgi.self_url %>?qid=<%= q.num %>">试礁</a></td>
+<%  column = conf.column_label
+    column.each_with_index do |label, i| %>
+    <td><%= item[i] %></td>
+<% end %>
   </tr>
 <% end %>
   </tbody>
@@ -105,17 +57,17 @@ end
 <hr>
 <p>
 Page:
-<% (topics.size/cgi.num).times do |i| %>
+<% (csvdata.size/cgi.num).times do |i| %>
    <% if i*cgi.num == cgi.start %>
-	[<%= i+1 %>]
+[<%= i+1 %>]
    <% else %>
-	<a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*cgi.num %>;num=<%= cgi.num %>">[<%= i+1 %>]</a>
+<a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*cgi.num %>;num=<%= cgi.num %>">[<%= i+1 %>]</a>
    <% end %>
 <% end %>
 <p>
 <hr>
 <address>
-<a href="mailto:ntcadm-web@nii.ac.jp">ntcadm-web@nii.ac.jp</a>
+<a href="<%= conf.address %>"><%= conf.address %></a>
 </address>
 </body>
 </html>
