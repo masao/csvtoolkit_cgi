@@ -17,18 +17,12 @@ padding-left: 10px;
 <body>
 <%= conf.header %>
 <hr>
-<form action="<%= cgi.self_url %>">
-ITEM: <input type="text" name="item_id">
-<input type="submit" value="編集">
-</form>
-<hr>
-
 <table>
   <tr>
 <%  column = conf.column_label
     column.each_with_index do |label, i| %>
     <th>
-	<% if cgi.sort_by.nil? or cgi.sort_by == "item_id" then %>
+	<% if cgi.sort_by.nil? or cgi.sort_by == i then %>
 	<%= label %>
 	<% else %>
 	<a href="<%= cgi.self_url %>?sort_by=#{i}"><%= label %></a>
@@ -54,6 +48,7 @@ ITEM: <input type="text" name="item_id">
 <% end %>
   </tbody>
 </table>
+<% if csvdata.size > cgi.num %>
 <hr>
 <p>
 Page:
@@ -63,6 +58,7 @@ Page:
    <% else %>
 <a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*cgi.num %>;num=<%= cgi.num %>">[<%= i+1 %>]</a>
    <% end %>
+<% end %>
 <% end %>
 <p>
 <hr>
