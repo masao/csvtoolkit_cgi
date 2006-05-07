@@ -6,7 +6,7 @@ require "index.rb"
 
 class TCConfig < Test::Unit::TestCase
    def setup
-      @conf = Config::new("test.conf")
+      @conf = Config::new("test/test.conf")
    end
    def test_config
       assert(@conf)
