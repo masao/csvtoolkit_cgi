@@ -15,7 +15,12 @@ class TCConfig < Test::Unit::TestCase
 end
 
 class TCCSVToolKit < Test::Unit::TestCase
+   def setup
+      @conf = Config::new("test/test.conf")
+   end
    def test_load_csv
       assert(load_csv("test/"))
+      assert(load_csv(@conf.datadir))
+      assert_equal(load_csv("test/"), load_csv("test/"))
    end
 end
