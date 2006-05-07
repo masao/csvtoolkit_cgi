@@ -75,7 +75,11 @@ class CSVToolkit
    def load_csv( dir )
       @data = []
       Dir.glob(File.join(dir, "*.csv")).each do |f|
-         @data += CSV.readlines(f)
+         tmp = CSV.readlines(f)
+         if @conf.skip_csvheader
+            tmp = tmp[@conf.skip_csvheader..-1]
+         end
+         @data += tmp
       end
       @data
    end
