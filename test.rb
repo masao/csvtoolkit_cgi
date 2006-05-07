@@ -13,3 +13,9 @@ class TCConfig < Test::Unit::TestCase
       assert_equal("csv/", @conf.datadir)
    end
 end
+
+class TCCSVToolKit < Test::Unit::TestCase
+   def test_load_csv
+      assert(load_csv("test/"))
+   end
+end
