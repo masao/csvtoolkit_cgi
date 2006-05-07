@@ -14,6 +14,15 @@ th { font-size:smaller; }
 </div>
 <hr>
 
+<% if csvdata.toc %>
+<ul>
+<% csvdata.toc.keys.sort.each do |key| %>
+<%  start = csvdata.toc[key]/conf.display_per_page %>
+  <li><a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by %>;start=<%= start %>#row<%= csvdata.toc[key] %>"><%= key %></a>
+<% end %>
+</ul>
+<% end %>
+
 <table>
   <tr>
 <%  columns = conf.column_label

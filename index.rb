@@ -66,7 +66,7 @@ class CSVToolkit
       end
    end
 
-   attr_reader :data
+   attr_reader :data, :toc
    def initialize( config )
       @conf = config
    end
@@ -88,6 +88,12 @@ class CSVToolkit
       #p idx
       @data = @data.sort_by{|e| e[idx] || "\xff" }
       @data.reverse! if reverse
+      @toc = {}
+      @data.each_with_index do |e, i|
+         if not @toc.has_key?(e[idx]) and not e[idx].nil? and not e[idx].empty?
+            @toc[e[idx]] = i
+         end
+      end
       @data
    end
    def []( idx )
