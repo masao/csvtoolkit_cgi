@@ -47,9 +47,6 @@ class CGI
    def start
       valid?("start") ? self.params["start"][0].to_i : 0
    end
-   def num
-      valid?("num") ? self.params["num"][0].to_i : 20
-   end
    def self_url
       "http://" + server_name.to_s + script_name.to_s
    end

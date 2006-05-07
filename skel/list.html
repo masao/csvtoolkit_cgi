@@ -13,7 +13,7 @@ th { font-size:smaller; }
 <%= conf.header %>
 </div>
 <hr>
-<%= display %>
+
 <table>
   <tr>
 <%  columns = conf.column_label
@@ -30,7 +30,7 @@ th { font-size:smaller; }
 
   <tbody>
 <%
-((cgi.start)...(cgi.start+cgi.num)).each do |i| %>
+((cgi.start)...(cgi.start+conf.display_per_page)).each do |i| %>
 <%
   item = csvdata[i]
   break if item.nil?
@@ -44,15 +44,15 @@ th { font-size:smaller; }
   </tbody>
 </table>
 
-<% if csvdata.size > cgi.num %>
+<% if csvdata.size > conf.display_per_page %>
 <hr>
 <p>
 Page:
-<% (csvdata.size/cgi.num).times do |i| %>
-   <% if i*cgi.num == cgi.start %>
+<% (csvdata.size/conf.display_per_page).times do |i| %>
+   <% if i*conf.display_per_page == cgi.start %>
 [<%= i+1 %>]
    <% else %>
-<a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*cgi.num %>;num=<%= cgi.num %>">[<%= i+1 %>]</a>
+<a href="<%= cgi.self_url %>?sort_by=<%= cgi.sort_by ? cgi.sort_by : "" %>;start=<%= i*conf.display_per_page %>">[<%= i+1 %>]</a>
    <% end %>
 <% end %>
 <% end %>
